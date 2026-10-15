@@ -224,6 +224,7 @@ section.block { padding-block: 96px 0; }
 .s ul { padding-left: 18px; display: grid; gap: 4px; }
 .facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
 .facts .metric { border: 1px solid var(--hair); border-radius: var(--r-pill); padding: 4px 12px; font-size: 13px; color: var(--ink); }
+.facts .metric .k { color: var(--muted); }
 .story .links { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 15px; }
 .wide .story-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 40px; }
 @media (max-width: 760px) { .wide .story-cols { grid-template-columns: 1fr; } }
@@ -329,101 +330,90 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
       <div class="group">
         <div class="group-head">
           <h3>making tech work in the real world<span class="dot">.</span></h3>
-          <p>Testing and building with tech and AI so it holds up outside the demo.</p>
+          <p>One thread in three parts: a faster way to test AI, a way to judge its answers, then using both to win a deal.</p>
         </div>
         <div class="cards">
 
-          <details class="card wide" id="ai-reliability">
+          <details class="card" id="test-harness">
             <summary>
-              <span class="tag">GenAI · build vs buy</span>
-              <h4>Helping legal teams judge whether AI is reliable enough to use</h4>
-              <p class="outcome">Designed the build vs. buy bake-off that won over the American Arbitration Association against its own in-house tool.</p>
+              <span class="tag">Automation · Apps Script</span>
+              <h4>Building an AI testing tool when Engineering was at capacity</h4>
+              <p class="outcome">Setting up an assessment went from an hour or more to about a minute.</p>
+              <div class="facts"><span class="metric"><span class="k">Time saved:</span> 1+ hr → ~1 min</span><span class="metric"><span class="k">Adopted by:</span> CX, Sales, Product</span><span class="metric"><span class="k">Build time:</span> ~1-2 hrs</span></div>
               <span class="more"><span class="open-txt">read the story</span><span class="close-txt">close</span></span>
             </summary>
             <div class="story">
               <div class="story-steps">
-                <div class="story-cols">
-                  <div class="s">
-                    <span class="label">The problem</span>
-                    <p>In the early GenAI days, nobody knew how to assess legal AI tools. Legal teams used to rule-based software often expected every answer to be 100% right, which no AI tool (or panel of lawyers) can promise.</p>
-                  </div>
-                  <div class="s">
-                    <span class="label">What I owned</span>
-                    <p>How Josef and its customers judged the reliability of Josef Q, its GenAI product, and the build vs buy assessment for the American Arbitration Association (AAA).</p>
-                  </div>
+                <div class="s">
+                  <span class="label">The problem</span>
+                  <p>Testing AI-powered FAQ tools built on Josef Q meant pasting 100+ questions in one by one, waiting up to a minute for each response, then copying it back into a spreadsheet to assess. It took tens of hours a week from customer-facing teams, and Engineering had no capacity to help.</p>
                 </div>
                 <div class="s">
                   <span class="label">What I did</span>
-                  <ul>
-                    <li>Helped design an internal scoring framework, with Cornell and NYU, that rated each answer on accuracy and clarity.</li>
-                    <li>With CX and Sales, turned it into a simple 3-point scale customers could use themselves, with separate labels for answers that created real risk and ones that just needed polish. It moved lawyers from chasing perfection to managing risk.</li>
-                    <li>For AAA, designed and ran a bake-off between Josef Q and AAA's in-house tool, then taught their team the framework so they could check my scoring blind.</li>
-                  </ul>
-                  <div class="facts"><span class="metric">~200-300 questions</span><span class="metric">3 rounds</span><span class="metric">blind cross-check by the buyer</span></div>
+                  <p>As a non-engineer, I used ChatGPT to write an Apps Script that sent each question in the spreadsheet to the tool's API endpoint and wrote the answer from the response back into it, ready for the team to assess. It was set up so anyone could point it at a different Josef Q tool just by entering its tool ID, so it was easy to reuse.</p>
                 </div>
                 <div class="s result">
                   <span class="label">What changed</span>
-                  <p>Josef won the AAA deal, and AAA's Chief Innovation Officer later pointed to governance and repeated testing as the reason to buy. The 3-point scale became the standard way customer teams assessed tools, used with an estimated 50+ customers and prospects, including in POCs that converted such as adidas and Australian Retirement Trust.</p>
+                  <p>CX, Sales and Product adopted it straight away. It ran in every Josef Q pilot and made it quick to show customers their tool's reliability climbing, commonly from 60-70% to around 90% after one or two rounds of moderation.</p>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <details class="card" id="ai-reliability">
+            <summary>
+              <span class="tag">GenAI · evaluation</span>
+              <h4>Creating a way for legal and compliance teams to judge whether AI is reliable enough to use</h4>
+              <p class="outcome">A simple reliability scale that became the standard way customers assessed Josef Q.</p>
+              <div class="facts"><span class="metric"><span class="k">Used with:</span> ~50+ customers &amp; prospects</span><span class="metric"><span class="k">Built into:</span> onboarding &amp; AI education</span><span class="metric"><span class="k">Converted POCs:</span> adidas and others</span></div>
+              <span class="more"><span class="open-txt">read the story</span><span class="close-txt">close</span></span>
+            </summary>
+            <div class="story">
+              <div class="story-steps">
+                <div class="s">
+                  <span class="label">The problem</span>
+                  <p>Customers and prospects didn't know how to judge whether their AI-powered FAQ tools were reliable enough to surface legal and compliance content directly to non-expert users. They struggled to manage that risk and were often bogged down trying to perfect each answer, an impossible task at scale. It blocked deals from progressing and new tools from launching.</p>
+                </div>
+                <div class="s">
+                  <span class="label">What I did</span>
+                  <p>I helped design an internal reliability framework with Cornell and NYU that scored test outputs on accuracy and clarity, giving each Josef Q tool an overall reliability score. With CX, I then turned it into a simple 3-point scale customers and prospects could use to assess the reliability of their own tools. It was specifically designed to help them separate out real risk from outputs that just needed polish.</p>
+                </div>
+                <div class="s result">
+                  <span class="label">What changed</span>
+                  <p>Teams shifted from chasing perfect answers to managing real risk, gaining a clear sense of their tools' reliability and helping deals and launches progress. The scale was used in multiple POCs that converted, including adidas and Australian Retirement Trust, and became part of customer onboarding and education on working with and assessing AI.</p>
                 </div>
               </div>
               <div class="links">
-                <a href="https://joseflegal.com/blog/build-or-buy-genai-why-the-american-arbitration-association-chose-josef-q/" target="_blank" rel="noopener">AAA on why they chose Josef Q ↗</a>
                 <a href="https://joseflegal.com/blog/reliability-101-how-to-stress-test-genai-for-legal-and-compliance/" target="_blank" rel="noopener">Reliability 101 fireside chat ↗</a>
               </div>
             </div>
           </details>
 
-          <details class="card" id="test-harness">
+          <details class="card wide" id="aaa">
             <summary>
-              <span class="tag">Automation · Python</span>
-              <h4>Building an AI testing tool when Engineering was at capacity</h4>
-              <p class="outcome">A test run went from hours to about a minute.</p>
+              <span class="tag">GenAI · build vs buy</span>
+              <h4>Helping a buyer decide whether to build or buy legal AI</h4>
+              <p class="outcome">Designed and ran the bake-off that led the American Arbitration Association to choose Josef Q over building in-house.</p>
+              <div class="facts"><span class="metric"><span class="k">Reliability:</span> on par with or better than in-house</span><span class="metric"><span class="k">Verified:</span> blind cross-check by AAA</span><span class="metric"><span class="k">Outcome:</span> AAA chose to buy, not build</span></div>
               <span class="more"><span class="open-txt">read the story</span><span class="close-txt">close</span></span>
             </summary>
             <div class="story">
               <div class="story-steps">
                 <div class="s">
-                  <span class="label">The problem</span>
-                  <p>Testing Josef Q meant pasting 100+ questions into the tool one by one and waiting up to a minute for each answer. It was taking tens of hours a week, and the engineering backlog was full.</p>
-                </div>
+                    <span class="label">The problem</span>
+                    <p>The American Arbitration Association (AAA) had started building its own in-house AI tool, and was deciding whether to invest the developer resources to keep building or buy Josef Q. A key question for them was whether Josef Q could be as reliable as an internally built tool.</p>
+                  </div>
                 <div class="s">
                   <span class="label">What I did</span>
-                  <p>As a non-engineer, I used ChatGPT to write a Python script that sent every question in a Google Sheet to the tool and wrote the answers back. I kept the grading manual on purpose, because the point was to judge AI on legal content.</p>
+                  <p>I designed and ran a bake-off between Josef Q and AAA's in-house tool. Using my automated testing tool and the reliability framework I co-developed, I ran three rounds of tests on ~200-300 questions to compare both tools fairly. The rounds were designed to highlight key Josef Q features, like response moderation and its impact on reliability. I also taught AAA's team the framework so they could check my scoring blind.</p>
                 </div>
                 <div class="s result">
                   <span class="label">What changed</span>
-                  <p>CX, Sales and Product adopted it straight away. It ran in every Josef Q pilot and made it quick to show customers their tool's reliability climbing, commonly from 60-70% to around 90% after one or two rounds of moderation.</p>
-                  <div class="facts"><span class="metric">hours → ~1 min</span><span class="metric">3 teams</span><span class="metric">~1-2 hrs to build</span></div>
+                  <p>The bake-off showed Josef Q was as reliable as AAA's own tool or better, and highlighted its differentiating features, which led to Josef winning the deal. In a fireside chat, AAA's Chief Innovation Officer later pointed to governance and repeated testing as the reason to buy.</p>
                 </div>
               </div>
-            </div>
-          </details>
-
-          <details class="card" id="workflows">
-            <summary>
-              <span class="tag">Workflow automation</span>
-              <h4>Building 100+ automated legal workflows</h4>
-              <p class="outcome">Intake, triage, approvals and document generation for enterprise legal teams.</p>
-              <span class="more"><span class="open-txt">read the story</span><span class="close-txt">close</span></span>
-            </summary>
-            <div class="story">
-              <div class="story-steps">
-                <div class="s">
-                  <span class="label">The problem</span>
-                  <p>In-house legal teams were buried in repeat requests and manual documents, and needed tools their business colleagues would actually use.</p>
-                </div>
-                <div class="s">
-                  <span class="label">What I did</span>
-                  <ul>
-                    <li>Designed, built and tested automated workflows on Josef: intake triage, document generation and conditional approval routing.</li>
-                    <li>Kept a library of reusable tool and document templates to speed up builds, plus demo portals Sales could duplicate for each prospect.</li>
-                    <li>Reviewed and shaped the privacy compliance workflow tools Josef built with LexisNexis so they were fit for purpose and easy to scale.</li>
-                  </ul>
-                </div>
-                <div class="s result">
-                  <span class="label">What changed</span>
-                  <p>Built or consulted on 100+ workflows for enterprise customers and sales demos, and ran Josef's frontline support channel, fixing live workflow issues for customers.</p>
-                </div>
+              <div class="links">
+                <a href="https://joseflegal.com/blog/build-or-buy-genai-why-the-american-arbitration-association-chose-josef-q/" target="_blank" rel="noopener">AAA's fireside chat on why they chose Josef Q ↗</a>
               </div>
             </div>
           </details>
@@ -450,7 +440,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
               <div class="story-steps">
                 <div class="s">
                   <span class="label">The problem</span>
-                  <p>A global sportswear brand sent an unsolicited RFI for its US legal operations. Josef had no champion there and was up against established vendors.</p>
+                  <p>A Fortune 500 consumer brand sent an unsolicited RFI for its US legal operations. Josef had no champion there and was up against established vendors.</p>
                 </div>
                 <div class="s">
                   <span class="label">What I did</span>
@@ -502,6 +492,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
               <span class="tag">Security · compliance</span>
               <h4>Rescuing an overdue SOC 2 recertification</h4>
               <p class="outcome">Passed the SOC 2 Type II audit with no exceptions, and documented processes that made handover easy.</p>
+              <div class="facts"><span class="metric"><span class="k">Controls:</span> 30+ resolved</span><span class="metric"><span class="k">Evidence:</span> ~20-30 requests</span><span class="metric"><span class="k">Timeline:</span> 3-month audit window</span></div>
               <span class="more"><span class="open-txt">read the story</span><span class="close-txt">close</span></span>
             </summary>
             <div class="story">
@@ -524,7 +515,6 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
                     <li>Got a bridging letter from the auditor and worked with the COO on messaging to keep key deals moving.</li>
                     <li>Connected Vanta to ClickUp and Slack so security tasks landed in Engineering sprints automatically, and wrote Josef's first guide to how the audit works.</li>
                   </ul>
-                  <div class="facts"><span class="metric">30+ controls resolved</span><span class="metric">~20-30 evidence requests</span><span class="metric">3-month audit window</span></div>
                 </div>
                 <div class="s result">
                   <span class="label">What changed</span>
@@ -723,7 +713,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         <span>Power Automate</span>
         <span>Zapier</span>
         <span>n8n</span>
-        <span>Python (AI-assisted)</span>
+        <span>Apps Script (AI-assisted)</span>
         <span>HubSpot</span>
         <span>Vanta</span>
         <span>ClickUp</span>
@@ -818,5 +808,6 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     setTimeout(function () { btn.textContent = "copy"; }, 2000);
   });
 </script>
+
 
 </body></html>
