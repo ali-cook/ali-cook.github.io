@@ -190,7 +190,15 @@ section.block { padding-block: 96px 0; }
 .group-head { display: grid; gap: 6px; margin-bottom: 24px; }
 .group-head h3 { font-size: clamp(1.6rem, 3.4vw, 2.1rem); line-height: 1.15; }
 .group-head p { margin: 0; color: var(--muted); max-width: 620px; }
-.cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: start; }
+.cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: stretch; }
+/* side-by-side cards share a height while closed; "read the story" sits at the bottom */
+.card:not([open]) { display: flex; flex-direction: column; }
+.card:not([open]) > summary { flex: 1; }
+.cards .card summary { display: flex; flex-direction: column; }
+.cards .card summary > .tag { align-self: flex-start; }
+.cards .card summary > .more { margin-top: auto; padding-top: 4px; }
+/* while a story is open, its neighbours keep their own height */
+.cards:has(> .card[open]) > .card:not([open]) { align-self: start; }
 .card {
   background: var(--raised); border: 1px solid var(--hair); border-radius: var(--r-md);
   min-width: 0; transition: border-color .2s ease;
