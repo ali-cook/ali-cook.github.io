@@ -197,8 +197,6 @@ section.block { padding-block: 96px 0; }
 .cards .card summary { display: flex; flex-direction: column; }
 .cards .card summary > .tag { align-self: flex-start; }
 .cards .card summary > .more { margin-top: auto; padding-top: 4px; }
-/* while a story is open, its neighbours keep their own height */
-.cards:has(> .card[open]) > .card:not([open]) { align-self: start; }
 .card {
   background: var(--raised); border: 1px solid var(--hair); border-radius: var(--r-md);
   min-width: 0; transition: border-color .2s ease;
@@ -251,6 +249,8 @@ section.block { padding-block: 96px 0; }
 
 /* ---------- open stories take the full row ---------- */
 .card { scroll-margin-top: 84px; }
+/* the page script keeps the clicked story in place, so switch off the browser's own scroll adjusting */
+html { overflow-anchor: none; }
 .card[open] { grid-column: 1 / -1; }
 /* a closed card left alone in its row (because its neighbour opened) widens to fill it */
 .card.solo { grid-column: 1 / -1; }
@@ -878,32 +878,42 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   }
 
   function navHeight() { return nav ? nav.getBoundingClientRect().height : 0; }
+  function topOf(c) { return c.getBoundingClientRect().top; }
+  // keep a card's top where it was on screen, but never hidden under the nav
+  function keepAt(c, wanted) {
+    var min = navHeight() + 16;
+    // instant, so the page doesn't visibly slide (the site otherwise scrolls smoothly)
+    window.scrollBy({ top: topOf(c) - Math.max(wanted, min), behavior: "instant" });
+  }
+
+  function openCard(c) {
+    var before = topOf(c);
+    cards.forEach(function (o) { if (o !== c) o.open = false; });
+    c.open = true;
+    relayout();
+    // the header you clicked stays put; if it was off screen, bring it to the top
+    keepAt(c, before > window.innerHeight * 0.7 ? 0 : before);
+  }
+
+  function closeCard(c, fromBottom) {
+    var before = topOf(c);
+    c.open = false;
+    relayout();
+    if (fromBottom) { if (topOf(c) < navHeight()) keepAt(c, 0); }
+    else keepAt(c, before);
+    c.querySelector("summary").focus({ preventScroll: true });
+  }
 
   cards.forEach(function (c) {
+    c.querySelector("summary").addEventListener("click", function (e) {
+      e.preventDefault();
+      if (c.open) closeCard(c, false); else openCard(c);
+    });
     // close button at the end of each story
     var b = document.createElement("button");
     b.type = "button"; b.className = "story-close"; b.textContent = "close story ↑";
-    b.addEventListener("click", function () {
-      c.open = false;
-      c.querySelector("summary").focus({ preventScroll: true });
-    });
+    b.addEventListener("click", function () { closeCard(c, true); });
     c.querySelector(".story").appendChild(b);
-
-    c.addEventListener("toggle", function () {
-      if (c.open) {
-        cards.forEach(function (o) { if (o !== c && o.open) o.open = false; });
-        relayout();
-        // the card may have moved to a new row; bring its top into view
-        requestAnimationFrame(function () {
-          var r = c.getBoundingClientRect();
-          if (r.top < navHeight() + 8 || r.top > window.innerHeight * 0.6) c.scrollIntoView({ behavior: "smooth", block: "start" });
-        });
-      } else {
-        relayout();
-        var r = c.getBoundingClientRect();
-        if (r.top < navHeight()) c.scrollIntoView({ block: "start" });
-      }
-    });
   });
 
   // Open a story when the page is linked to it, e.g. …#soc2
@@ -912,9 +922,8 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     if (!id) return;
     var el = document.getElementById(id);
     if (el && el.tagName === "DETAILS") {
-      el.open = true;
-      relayout();
-      el.scrollIntoView({ block: "start" });
+      openCard(el);
+      keepAt(el, 0);
     }
   }
   window.addEventListener("hashchange", openFromHash);
