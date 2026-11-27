@@ -249,6 +249,35 @@ section.block { padding-block: 96px 0; }
 .wide .story-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 40px; }
 @media (max-width: 760px) { .wide .story-cols { grid-template-columns: 1fr; } }
 
+/* ---------- open stories take the full row ---------- */
+.card { scroll-margin-top: 84px; }
+.card[open] { grid-column: 1 / -1; }
+/* a closed card left alone in its row (because its neighbour opened) widens to fill it */
+.card.solo { grid-column: 1 / -1; }
+.card[open] .story { animation: story-in .25s ease-out; }
+@keyframes story-in { from { opacity: 0; transform: translateY(-6px); } }
+@media (prefers-reduced-motion: reduce) { .card[open] .story { animation: none; } }
+/* at full width, problem and what I did sit side by side; the result runs underneath */
+@media (min-width: 761px) {
+  .card[open] .story-steps:not(:has(.story-cols)) { grid-template-columns: 1fr 1fr; column-gap: 56px; }
+  .card[open] .story-steps:not(:has(.story-cols)) > .s.result { grid-column: 1 / -1; }
+  .card[open] .story-steps:not(:has(.story-cols)) > .s:nth-child(2)::before { left: -42px; }
+  .card[open] .story-cols { column-gap: 56px; }
+  .card[open] .story-cols > .s:nth-child(2)::before { left: -42px; }
+}
+/* "what changed" gets a soft emerald block so the payoff stands out */
+.s.result {
+  background: color-mix(in srgb, var(--emerald) 9%, transparent);
+  border-radius: var(--r-md); margin-left: -14px; padding: 12px 14px;
+}
+.s.result::before { left: -14px; top: 18px; }
+/* a second close at the end of the story */
+.story-close {
+  margin-top: 20px; background: transparent; border: 1px solid var(--hair); border-radius: var(--r-pill);
+  padding: 6px 14px; font: 700 14px var(--sans); color: var(--pink-text); cursor: pointer;
+}
+.story-close:hover { border-color: var(--pink-text); }
+
 /* ---------- out in the world ---------- */
 .press { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
 .press a, .press div.item {
@@ -826,6 +855,57 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   window.addEventListener("load", drawConnector);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawConnector);
 
+  // Stories open in place across the full row, one at a time.
+  var cards = Array.prototype.slice.call(document.querySelectorAll("details.card"));
+  var nav = document.querySelector(".nav");
+
+  // a closed card left alone in a row widens to fill it, so there's no gap beside it
+  function relayout() {
+    document.querySelectorAll(".cards").forEach(function (grid) {
+      var col = 0, prev = null;
+      Array.prototype.forEach.call(grid.children, function (c) {
+        if (!c.classList.contains("card")) return;
+        c.classList.remove("solo");
+        var full = c.open || c.classList.contains("wide");
+        if (full) {
+          if (col === 1 && prev) prev.classList.add("solo");
+          col = 0;
+        } else { col = col === 0 ? 1 : 0; }
+        prev = c;
+      });
+      if (col === 1 && prev && grid.querySelector(".card[open]")) prev.classList.add("solo");
+    });
+  }
+
+  function navHeight() { return nav ? nav.getBoundingClientRect().height : 0; }
+
+  cards.forEach(function (c) {
+    // close button at the end of each story
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "story-close"; b.textContent = "close story ↑";
+    b.addEventListener("click", function () {
+      c.open = false;
+      c.querySelector("summary").focus({ preventScroll: true });
+    });
+    c.querySelector(".story").appendChild(b);
+
+    c.addEventListener("toggle", function () {
+      if (c.open) {
+        cards.forEach(function (o) { if (o !== c && o.open) o.open = false; });
+        relayout();
+        // the card may have moved to a new row; bring its top into view
+        requestAnimationFrame(function () {
+          var r = c.getBoundingClientRect();
+          if (r.top < navHeight() + 8 || r.top > window.innerHeight * 0.6) c.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      } else {
+        relayout();
+        var r = c.getBoundingClientRect();
+        if (r.top < navHeight()) c.scrollIntoView({ block: "start" });
+      }
+    });
+  });
+
   // Open a story when the page is linked to it, e.g. …#soc2
   function openFromHash() {
     var id = (location.hash || "").slice(1);
@@ -833,6 +913,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     var el = document.getElementById(id);
     if (el && el.tagName === "DETAILS") {
       el.open = true;
+      relayout();
       el.scrollIntoView({ block: "start" });
     }
   }
