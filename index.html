@@ -257,23 +257,40 @@ html { overflow-anchor: none; }
 .card[open] .story { animation: story-in .25s ease-out; }
 @keyframes story-in { from { opacity: 0; transform: translateY(-6px); } }
 @media (prefers-reduced-motion: reduce) { .card[open] .story { animation: none; } }
-/* at full width, problem and what I did sit side by side; the result runs underneath */
-@media (min-width: 761px) {
-  .card[open] .story-steps:not(:has(.story-cols)) { grid-template-columns: 1fr 1fr; column-gap: 56px; }
-  .card[open] .story-steps:not(:has(.story-cols)) > .s.result { grid-column: 1 / -1; }
-  .card[open] .story-steps:not(:has(.story-cols)) > .s:nth-child(2)::before { left: -42px; }
-  .card[open] .story-cols { column-gap: 56px; }
-  .card[open] .story-cols > .s:nth-child(2)::before { left: -42px; }
-}
+/* steps: a dot beside each label, no connecting line */
+.story-steps { padding-left: 0; padding-top: 20px; gap: 18px; }
+.story-steps::before { display: none; }
+.s { padding-left: 22px; }
+.s::before { left: 0; top: 5px; width: 12px; height: 12px; }
 /* "what changed" gets a soft emerald block so the payoff stands out */
 .s.result {
   background: color-mix(in srgb, var(--emerald) 9%, transparent);
-  border-radius: var(--r-md); margin-left: -14px; padding: 12px 14px;
+  border-radius: var(--r-md); padding: 12px 14px 12px 36px;
 }
-.s.result::before { left: -14px; top: 18px; }
-/* a second close at the end of the story */
+.s.result::before { left: 14px; top: 17px; }
+/* open stories read across the row so they fit on one screen */
+@media (min-width: 761px) {
+  .card[open] summary { padding-top: 20px; padding-bottom: 14px; }
+  .card[open] .story-steps { padding-top: 16px; }
+  .card[open] .story-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px; align-items: start; }
+  .card[open] .story-steps > .s.result { grid-column: 1 / -1; }
+  .card[open] .story-cols { display: contents; }
+}
+@media (min-width: 1000px) {
+  .card[open] .story-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .card[open] .story-steps > .s.result { grid-column: auto; }
+  /* SOC 2 has four steps: the problem and what I owned share the first column */
+  #soc2[open] .story-cols { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  /* stories with a list of what I did: the list gets a wide column, the result runs underneath */
+  .card[open] .story-steps:has(ul) { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); }
+  .card[open] .story-steps:has(ul) > .s.result { grid-column: 1 / -1; }
+}
+/* links and the bottom close sit on one line */
+.story { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; }
+.story-steps { flex: 1 1 100%; }
+.story .links { margin-top: 4px; }
 .story-close {
-  margin-top: 20px; background: transparent; border: 1px solid var(--hair); border-radius: var(--r-pill);
+  margin: 4px 0 0 auto; background: transparent; border: 1px solid var(--hair); border-radius: var(--r-pill);
   padding: 6px 14px; font: 700 14px var(--sans); color: var(--pink-text); cursor: pointer;
 }
 .story-close:hover { border-color: var(--pink-text); }
@@ -893,6 +910,10 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     relayout();
     // the header you clicked stays put; if it was off screen, bring it to the top
     keepAt(c, before > window.innerHeight * 0.7 ? 0 : before);
+    // then, if the story runs off the bottom, glide up just enough to show it all (top stays below the nav)
+    var r = c.getBoundingClientRect();
+    var overflow = r.bottom - (window.innerHeight - 16);
+    if (overflow > 0) window.scrollBy({ top: Math.min(overflow, r.top - navHeight() - 16), behavior: "smooth" });
   }
 
   function closeCard(c, fromBottom) {
