@@ -250,7 +250,7 @@ section.block { padding-block: 96px 0; }
 @media (max-width: 760px) { .wide .story-cols { grid-template-columns: 1fr; } }
 
 /* ---------- out in the world ---------- */
-.press { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.press { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
 .press a, .press div.item {
   display: grid; gap: 8px; padding: 20px 0 0; border-top: 2px solid var(--ink);
   color: var(--ink); text-decoration: none; min-width: 0;
@@ -410,7 +410,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
             </div>
           </details>
 
-          <details class="card wide" id="aaa">
+          <details class="card" id="aaa">
             <summary>
               <span class="tag">GenAI · build vs buy</span>
               <h4>Helping a buyer decide whether to build or buy legal AI</h4>
@@ -439,6 +439,35 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
             </div>
           </details>
 
+          <details class="card" id="genai-pilots">
+            <summary>
+              <span class="tag">GenAI · pilots &amp; adoption</span>
+              <h4>Taking GenAI pilots through to adoption</h4>
+              <p class="outcome">Designed testing and training for Josef Q's first pilots, then supported later ones through to rollout.</p>
+              <div class="facts"><span class="metric"><span class="k">First pilots:</span> 6 at once, 4 converted</span><span class="metric"><span class="k">adidas:</span> global rollout</span><span class="metric"><span class="k">ART:</span> ~15 min saved per question</span></div>
+              <span class="more"><span class="open-txt">read the story</span><span class="close-txt">close</span></span>
+            </summary>
+            <div class="story">
+              <div class="story-steps">
+                <div class="s">
+                  <span class="label">The problem</span>
+                  <p>Josef Q was brand new, and most legal teams had never put generative AI in front of their own employees. Before launch, Josef ran private pilots with in-house legal teams to prove it worked on their content, and each team needed testing and training to get there.</p>
+                </div>
+                <div class="s">
+                  <span class="label">What I did</span>
+                  <p>On the first 6 pilots, which ran at the same time, I managed testing and training for every team while our COO led. I ran test rounds with my testing tool and reliability framework, trained teams on how to ask questions and moderate responses, and wrote playbooks on preparing their content. On later pilots I was the product expert, and the leads ran them using the frameworks and playbooks I'd designed.</p>
+                </div>
+                <div class="s result">
+                  <span class="label">What changed</span>
+                  <p>4 of the first 6 pilots converted. Later pilots I supported went on to full rollouts, including adidas deploying Josef Q across its 65,000+ workforce and Australian Retirement Trust, whose employees report saving about 15 minutes per question.</p>
+                </div>
+              </div>
+              <div class="links">
+                <a href="https://joseflegal.com/blog/were-saving-15-minutes-per-question-the-australian-retirement-trusts-adam-fitzhenry-on-answering-people-questions-at-scale-with-ai/" target="_blank" rel="noopener">Australian Retirement Trust on saving 15 minutes per question ↗</a>
+              </div>
+            </div>
+          </details>
+
         </div>
       </div>
 
@@ -454,6 +483,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
               <span class="tag">Process mapping · enterprise</span>
               <h4>From a cold RFI to a signed global brand</h4>
               <p class="outcome">Signed in under 6 months, with no prior relationship.</p>
+              <div class="facts"><span class="metric"><span class="k">Timeline:</span> under 6 months</span><span class="metric"><span class="k">Trial:</span> 4 weeks, 4 champions</span><span class="metric"><span class="k">Templates:</span> 30-40 → about half as many workflows</span></div>
               <span class="more"><span class="open-txt">read the story</span><span class="close-txt">close</span></span>
             </summary>
             <div class="story">
@@ -467,7 +497,8 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
                   <ul>
                     <li>Co-led two RFI rounds and the RFP with our Head of Sales.</li>
                     <li>Starting from a short brief, consulted teams across the company to map their processes, then co-designed workflow proposals with Product, covering authentication, e-signature and Salesforce and DMS integrations.</li>
-                    <li>Scripted and narrated tailored demo videos, and ran a structured 4-week trial where their team built live workflows.</li>
+                    <li>Co-designed a plan to consolidate 30-40 contract templates into about half as many self-serve workflows behind one legal front door, a model that could scale to hundreds of documents across their global teams.</li>
+                    <li>Scripted and narrated tailored demo videos, and ran a structured 4-week trial where 4 champions built full workflows on their own after just 1-2 sessions, then asked to onboard more colleagues before it ended.</li>
                   </ul>
                 </div>
                 <div class="s result">
@@ -649,6 +680,11 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
           <span class="note">Josef blog · Oct 2024 ↗</span>
           <h4>Reliability 101: how to stress-test GenAI for legal and compliance</h4>
           <p>A fireside chat on the reliability framework and how customers used it.</p>
+        </a>
+        <a href="https://joseflegal.com/blog/college-of-law-puts-hundreds-of-future-lawyers-through-legaltech-training/" target="_blank" rel="noopener">
+          <span class="note">Josef blog · Mar 2023 ↗</span>
+          <h4>College of Law introduces legaltech training</h4>
+          <p>The Designer &amp; Builder Program pilots I designed and ran, which became part of the College's Practical Legal Training course.</p>
         </a>
         <div class="item">
           <span class="note">JURIX 2023 · Maastricht</span>
